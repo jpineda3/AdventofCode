@@ -16,9 +16,9 @@ def day_1_puzzle_b(input_matrix):
 
 def main(day, mode="sample"):
     if mode == "sample":
-        filename = "day-" + day + "-sample.txt"
+        filename = "day-" + day + "/sample.txt"
     else:
-        filename = "day-" + day + "-input.txt"
+        filename = "day-" + day + "/input.txt"
     puzzleA, input_ = eval("day_" + day + "_puzzle_a(filename)")
     answer = [puzzleA, eval("day_" + day + "_puzzle_b(input_)")]
     print("Answer to puzzle A:", answer[0])
