@@ -44,13 +44,14 @@ def day_2_puzzle_b(input_matrix):
             positive_count = sum(1 for x in diff if x > 0)
             negative_count = sum(1 for x in diff if x < 0)
             zero_count = sum(1 for x in diff if x == 0)
-            beyond_limit = sum(1 for x in diff if x > 3 or x < -3) 
+            beyond_limit = sum(1 for x in diff if x > 3 or x < -3)
+            beyond_limit_at_ends = sum(1 for x in [diff[0], diff[-1]] if x > 3 or x < -3)
             same_sign = bool(bool(positive_count)^bool(negative_count))
 
             beyond_limit_safe = False
             zero_safe = False
             if same_sign:
-                beyond_limit_safe = beyond_limit == 1 and sum(1 for x in [diff[0], diff[-1]] if x > 3 or x < -3) == 1 and not zero_count
+                beyond_limit_safe = beyond_limit == 1 and beyond_limit_at_ends == 1 and not zero_count
                 zero_safe = zero_count == 1 and not beyond_limit
                 
             if positive_count > negative_count:
