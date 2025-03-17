@@ -35,6 +35,34 @@ def day_2_puzzle_a(filename):
             safety.append(0)
     return sum(safety), [input_list, diff_list, safety]
 
+def day_2_puzzle_b(input_matrix):
+    diff_list = input_matrix[1]
+    made_safe = input_matrix[2]
+
+    for i, diff in enumerate(diff_list):
+        if made_safe[i] == 0:
+            positive_count = sum(1 for x in diff if x > 0)
+            negative_count = sum(1 for x in diff if x < 0)
+            zero_count = sum(1 for x in diff if x == 0)
+            beyond_limit = sum(1 for x in diff if x > 3 or x < -3) 
+            same_sign = bool(bool(positive_count)^bool(negative_count))
+
+            beyond_limit_safe = False
+            zero_safe = False
+            if same_sign:
+                beyond_limit_safe = beyond_limit == 1 and sum(1 for x in [diff[0], diff[-1]] if x > 3 or x < -3) == 1 and not zero_count
+                zero_safe = zero_count == 1 and not beyond_limit
+                
+            if positive_count > negative_count:
+                change_sign = negative_count == 1
+            elif negative_count > positive_count:
+                change_sign = positive_count == 1
+            sign_safe = change_sign and not zero_count and not beyond_limit
+
+            if sign_safe ^ zero_safe ^ beyond_limit_safe:
+                made_safe[i] = 1
+    return sum(made_safe)
+
 
 def main(day, mode="sample", puzzle="both"):
     if mode == "sample":
