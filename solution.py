@@ -173,7 +173,28 @@ def day_4_puzzle_b(input_matrix, debug):
     answer = counter
     return answer
 
+def day_5_puzzle_a(filename, debug):
+    input = common.read_file(filename)
+    rules = []
+    updates = []
+    rule_book = {}
+    # Get strings in input with '|'
+    for i, line in enumerate(input):
+        if "|" in line:
+            rules.append(line)
+        elif "," in line:
+            updates.append(line)
+    if debug: print(f"DEBUG: Rules\n{rules}\nDEBUG: Updates\n{updates}")
 
+    for rule in rules:
+        # Split the rule into two parts
+        parts = rule.split("|")
+        key = int(parts[0])
+        
+        if debug: print(f"DEBUG: First part of rule: {int(parts[0])}. Second part of rule: {int(parts[1])}")
+
+    answer = None
+    return answer, input
 
 
 
