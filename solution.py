@@ -2,7 +2,7 @@ import common
 import argparse
 import re
 
-def day_1_puzzle_a(filename):
+def day_1_puzzle_a(filename, debug):
     input = common.read_file(filename)
     list_len = len(input)
     input_list = common.strlist_to_intlist(input)
@@ -11,12 +11,12 @@ def day_1_puzzle_a(filename):
     distance = [abs(input_list_cols_sorted[0][i]-input_list_cols_sorted[1][i]) for i in range(list_len)]
     return sum(distance), input_list_cols
 
-def day_1_puzzle_b(input_matrix):
+def day_1_puzzle_b(input_matrix, debug):
     similarity = [input_matrix[1].count(x)*x for x in input_matrix[0]]
     return sum(similarity)
 
 
-def day_2_puzzle_a(filename):
+def day_2_puzzle_a(filename, debug):
     input = common.read_file(filename)
     input_list = common.strlist_to_intlist(input)
     safety = [] * len(input_list)
@@ -36,7 +36,7 @@ def day_2_puzzle_a(filename):
             safety.append(0)
     return sum(safety), [input_list, diff_list, safety]
 
-def day_2_puzzle_b(input_matrix):
+def day_2_puzzle_b(input_matrix, debug):
     diff_list = input_matrix[1]
     made_safe = input_matrix[2]
 
@@ -65,7 +65,7 @@ def day_2_puzzle_b(input_matrix):
                 made_safe[i] = 1
     return sum(made_safe)
 
-def day_3_puzzle_a(filename):
+def day_3_puzzle_a(filename, debug):
     input = common.read_file(filename)
     # Combine all the lines into a single string
     input = "".join(input)
@@ -80,7 +80,7 @@ def day_3_puzzle_a(filename):
     answer = sum([x[0]*x[1] for x in valid_num])
     return answer, [valid_num, proceed]
 
-def day_3_puzzle_b(input_matrix):
+def day_3_puzzle_b(input_matrix, debug):
     # Get first two columns of the input matrix
     valid_num = input_matrix[0]
     proceed = input_matrix[1]
@@ -98,26 +98,117 @@ def day_3_puzzle_b(input_matrix):
             answer = answer + prod
     return answer
 
+def day_4_puzzle_a(filename, debug):
+    input = common.read_file(filename)
+    counter = 0
+    # For loop to match "XMAS"
+    for i, word in enumerate(input):
+        for j in range(len(word)):
+            if word[j] == "X":
+                # right
+                if j+3 < len(word):
+                    if word[j:j+4] == "XMAS":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] right")
+                # left
+                if j-3 >= 0:
+                    if word[j-3:j+1] == "SAMX":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] left")
+                # down
+                if i+3 < len(input):
+                    if input[i+1][j] == "M" and input[i+2][j] == "A" and input[i+3][j] == "S":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] down")
+                # up
+                if i-3 >= 0:
+                    if input[i-1][j] == "M" and input[i-2][j] == "A" and input[i-3][j] == "S":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] up")
+                # diagonal right down
+                if i+3 < len(input) and j+3 < len(word):
+                    if input[i+1][j+1] == "M" and input[i+2][j+2] == "A" and input[i+3][j+3] == "S":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] diagonal right down")
+                # diagonal left down
+                if i+3 < len(input) and j-3 >= 0:
+                    if input[i+1][j-1] == "M" and input[i+2][j-2] == "A" and input[i+3][j-3] == "S":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] diagonal left down")
+                # diagonal right up
+                if i-3 >= 0 and j+3 < len(word):
+                    if input[i-1][j+1] == "M" and input[i-2][j+2] == "A" and input[i-3][j+3] == "S":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] diagonal right up")
+                # diagonal left up
+                if i-3 >= 0 and j-3 >= 0:
+                    if input[i-1][j-1] == "M" and input[i-2][j-2] == "A" and input[i-3][j-3] == "S":
+                        counter += 1
+                        if debug: print(f"[{i},{j}] diagonal left up")
+    return counter, input
 
-def main(day, mode="sample", puzzle="both"):
+def day_4_puzzle_b(input_matrix, debug):
+    counter = 0
+    input = input_matrix
+    for i, word in enumerate(input):
+        for j in range(len(word)):
+            left = False
+            right = False
+            if word[j] == "A" and i-1 >= 0 and i+1 < len(input) and j-1 >= 0 and j+1 < len(word):
+                if input[i-1][j-1] == "M" and input[i+1][j+1] == "S":
+                    left = True
+                    if debug: print(f"[{i},{j}] left MAS")
+                if input[i-1][j-1] == "S" and input[i+1][j+1] == "M":
+                    left = True
+                    if debug: print(f"[{i},{j}] left SAM")
+                if input[i-1][j+1] == "M" and input[i+1][j-1] == "S":
+                    right = True
+                    if debug: print(f"[{i},{j}] right MAS")
+                if input[i-1][j+1] == "S" and input[i+1][j-1] == "M":
+                    right = True
+                    if debug: print(f"[{i},{j}] right SAM")
+                
+                if left and right:
+                    counter += 1
+    answer = counter
+    return answer
+
+
+
+
+
+
+
+
+
+def day_X_puzzle_a(filename, debug):
+    input = common.read_file(filename)
+    answer = None
+    return answer, input
+
+def day_X_puzzle_b(input_matrix, debug):
+    answer = None
+    return answer
+
+def main(day, mode="sample", puzzle="both", debug=False):
     if mode == "sample":
         filename = "day-" + day + "/sample.txt"
     else:
         filename = "day-" + day + "/input.txt"
-    puzzleA, input_ = eval("day_" + day + "_puzzle_a(filename)")
+    puzzleA, input_ = eval("day_" + day + "_puzzle_a(filename, debug)")
     answer = [puzzleA, None]
     print("Answer to puzzle A:", answer[0])
     
     if puzzle == "b" or puzzle == "both":
-        answer = [puzzleA, eval("day_" + day + "_puzzle_b(input_)")]
+        answer = [puzzleA, eval("day_" + day + "_puzzle_b(input_, debug)")]
         print("Answer to puzzle B:", answer[1])
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run Advent of Code solution.")
     parser.add_argument("--day", type=str, default="1", help="Day of the Advent of Code challenge")
     parser.add_argument("--mode", type=str, default="sample", help="Mode to run the solution (sample or input)")
     parser.add_argument("--puzzle", type=str, default="a", help="Puzzle to solve (a or b)")
-
+    parser.add_argument("--debug", action="store_true", help="Print debug information")
+    
     args = parser.parse_args()
-    main(day=args.day, mode=args.mode, puzzle=args.puzzle)
+    main(day=args.day, mode=args.mode, puzzle=args.puzzle, debug=args.debug)
