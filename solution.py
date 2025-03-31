@@ -178,6 +178,8 @@ def day_5_puzzle_a(filename, debug):
     rules = []
     updates = []
     rule_book = {}
+    valid = []
+    middle = []
     # Get strings in input with '|'
     for i, line in enumerate(input):
         if "|" in line:
@@ -185,15 +187,48 @@ def day_5_puzzle_a(filename, debug):
         elif "," in line:
             updates.append(line)
     if debug: print(f"DEBUG: Rules\n{rules}\nDEBUG: Updates\n{updates}")
+    # Arrange list in ascending order
+    rules.sort()
+    if debug: print(f"DEBUG: Sorted rules\n{rules}")
 
     for rule in rules:
         # Split the rule into two parts
         parts = rule.split("|")
-        key = int(parts[0])
-        
-        if debug: print(f"DEBUG: First part of rule: {int(parts[0])}. Second part of rule: {int(parts[1])}")
+        ref = int(parts[0])
+        rel = int(parts[1])
 
-    answer = None
+        if ref not in rule_book.keys():
+            rule_book[ref] = {'before':[], 'after':[]}
+        if rel not in rule_book.keys():
+            rule_book[rel] = {'before':[], 'after':[]}
+
+        rule_book[ref]['after'].append(rel)
+        rule_book[rel]['before'].append(ref)
+    if debug: print(f"DEBUG: Rule book\n{rule_book}")
+
+    for i, update in enumerate(updates):
+        # if debug: print(f"DEBUG: Update no. {i}")
+        update_int = [int(x) for x in (update.split(","))]
+        num_pages = len(update_int)
+        for j, page in enumerate(update_int):
+            # if debug: print(f"DEBUG: Page {page}")
+            # Get elements in page before j
+            before = update_int[0:j] if j > 0 else []
+            after = update_int[j+1:] if j < num_pages else []
+            # if debug: print(f"DEBUG: Update {i} page {page} Pages before {before}\nPages after {after}")
+
+            if not set(before) & set(rule_book[page]['after']) and not set(after) & set(rule_book[page]['before']):
+                if j == len(update_int)-1:
+                    valid.append(True)
+                    middle.append(update_int[int(num_pages/2)])
+                    if debug: print(f"DEBUG: Update {i} is valid!")
+            else:
+                valid.append(False)
+                middle.append(None)
+                if debug: print(f"DEBUG: Update {i} is invalid because of page {page}")
+                break
+    if debug: print(f"DEBUG: Middle numbers\n{middle}")
+    answer = sum([x for x in middle if x is not None])
     return answer, input
 
 
